@@ -35,57 +35,44 @@ import { browserHistory } from 'react-router';
  * @param  {string} password The password of the user to be logged in
  */
 export function login(username, password) {
-  return (dispatch) => {
-    // Show the loading indicator, hide the last error
-    dispatch(sendingRequest(true));
-    removeLastFormError();
-    // Generate salt for password encryption
-    const salt = genSalt(username);
-    // Encrypt password
-    bcrypt.hash(password, salt, (err, hash) => {
-      // Something wrong while hashing
-      if (err) {
-        requestFailed({
-          type: 'failed'
+    return (dispatch) => {
+        // Show the loading indicator, hide the last error
+        dispatch(sendingRequest(true));
+        removeLastFormError();
+        auth.login(username, password, (success, err) => {
+            // When the request is finished, hide the loading indicator
+            dispatch(sendingRequest(false));
+            dispatch(setAuthState(success));
+            if (success === true) {
+                // If the login worked, forward the user to the dashboard and clear the form
+                forwardTo('/dashboard');
+                dispatch(changeForm({
+                    username: "",
+                    password: ""
+                }));
+            } else {
+                requestFailed(err);
+            }
         });
-        return;
-      }
-      // Use auth.js to fake a request
-      auth.login(username, hash, (success, err) => {
-        // When the request is finished, hide the loading indicator
-        dispatch(sendingRequest(false));
-        dispatch(setAuthState(success));
-        if (success === true) {
-          // If the login worked, forward the user to the dashboard and clear the form
-          forwardTo('/dashboard');
-          dispatch(changeForm({
-            username: "",
-            password: ""
-          }));
-        } else {
-          requestFailed(err);
-        }
-      });
-    });
-  }
+    }
 }
 
 /**
  * Logs the current user out
  */
 export function logout() {
-  return (dispatch) => {
-    dispatch(sendingRequest(true));
-    auth.logout((success, err) => {
-      if (success === true) {
-        dispatch(sendingRequest(false));
-        dispatch(setAuthState(false));
-        browserHistory.replace(null, '/');
-      } else {
-        requestFailed(err);
-      }
-    });
-  }
+    return (dispatch) => {
+        dispatch(sendingRequest(true));
+        auth.logout((success, err) => {
+            if (success === true) {
+                dispatch(sendingRequest(false));
+                dispatch(setAuthState(false));
+                browserHistory.replace(null, '/');
+            } else {
+                requestFailed(err);
+            }
+        });
+    }
 }
 
 /**
@@ -94,39 +81,39 @@ export function logout() {
  * @param  {string} password The password of the new user
  */
 export function register(username, password) {
-  return (dispatch) => {
-    // Show the loading indicator, hide the last error
-    dispatch(sendingRequest(true));
-    removeLastFormError();
-    // Generate salt for password encryption
-    const salt = genSalt(username);
-    // Encrypt password
-    bcrypt.hash(password, salt, (err, hash) => {
-      // Something wrong while hashing
-      if (err) {
-        requestFailed({
-          type: 'failed'
+    return (dispatch) => {
+        // Show the loading indicator, hide the last error
+        dispatch(sendingRequest(true));
+        removeLastFormError();
+        // Generate salt for password encryption
+        const salt = genSalt(username);
+        // Encrypt password
+        bcrypt.hash(password, salt, (err, hash) => {
+            // Something wrong while hashing
+            if (err) {
+                requestFailed({
+                    type: 'failed'
+                });
+                return;
+            }
+            // Use auth.js to fake a request
+            auth.register(username, hash, (success, err) => {
+                // When the request is finished, hide the loading indicator
+                dispatch(sendingRequest(false));
+                dispatch(setAuthState(success));
+                if (success) {
+                    // If the register worked, forward the user to the homepage and clear the form
+                    forwardTo('/dashboard');
+                    dispatch(changeForm({
+                        username: "",
+                        password: ""
+                    }));
+                } else {
+                    requestFailed(err);
+                }
+            });
         });
-        return;
-      }
-      // Use auth.js to fake a request
-      auth.register(username, hash, (success, err) => {
-        // When the request is finished, hide the loading indicator
-        dispatch(sendingRequest(false));
-        dispatch(setAuthState(success));
-        if (success) {
-          // If the register worked, forward the user to the homepage and clear the form
-          forwardTo('/dashboard');
-          dispatch(changeForm({
-            username: "",
-            password: ""
-          }));
-        } else {
-          requestFailed(err);
-        }
-      });
-    });
-  }
+    }
 }
 
 /**
@@ -134,7 +121,7 @@ export function register(username, password) {
  * @param {boolean} newState True means a user is logged in, false means no user is logged in
  */
 export function setAuthState(newState) {
-  return { type: SET_AUTH, newState };
+    return {type: SET_AUTH, newState};
 }
 
 /**
@@ -145,7 +132,7 @@ export function setAuthState(newState) {
  * @return {object}                   Formatted action for the reducer to handle
  */
 export function changeForm(newState) {
-  return { type: CHANGE_FORM, newState };
+    return {type: CHANGE_FORM, newState};
 }
 
 /**
@@ -154,7 +141,7 @@ export function changeForm(newState) {
  * @return {object}          Formatted action for the reducer to handle
  */
 export function sendingRequest(sending) {
-  return { type: SENDING_REQUEST, sending };
+    return {type: SENDING_REQUEST, sending};
 }
 
 /**
@@ -162,8 +149,8 @@ export function sendingRequest(sending) {
  * @param {string} location The route the user should be forwarded to
  */
 function forwardTo(location) {
-  console.log('forwardTo(' + location + ')');
-  browserHistory.pushState(location);
+    console.log('forwardTo(' + location + ')');
+    browserHistory.pushState(location);
 }
 
 let lastErrType = "";
@@ -174,25 +161,33 @@ let lastErrType = "";
  * @param  {string} err.type The js-form__err + err.type class will be set on the form
  */
 function requestFailed(err) {
-  // Remove the class of the last error so there can only ever be one
-  removeLastFormError();
-  const form = document.querySelector('.form-page__form-wrapper');
-  // And add the respective classes
-  form.classList.add('js-form__err');
-  form.classList.add('js-form__err-animation');
-  form.classList.add('js-form__err--' + err.type);
-  lastErrType = err.type;
-  // Remove the animation class after the animation is finished, so it
-  // can play again on the next error
-  setTimeout(() => {
-    form.classList.remove('js-form__err-animation');
-  }, 150);
+    // Remove the class of the last error so there can only ever be one
+    removeLastFormError();
+    const form = document.querySelector('.form-page__form-wrapper');
+    // And add the respective classes
+    form.classList.add('js-form__err');
+    form.classList.add('js-form__err-animation');
+    form.classList.add('js-form__err--' + err.type);
+    lastErrType = err.type;
+    // Remove the animation class after the animation is finished, so it
+    // can play again on the next error
+    setTimeout(() => {
+        form.classList.remove('js-form__err-animation');
+    }, 150);
 }
 
 /**
  * Removes the last error from the form
  */
 function removeLastFormError() {
-  const form = document.querySelector('.form-page__form-wrapper');
-  form.classList.remove('js-form__err--' + lastErrType);
+    const form = document.querySelector('.form-page__form-wrapper');
+    form.classList.remove('js-form__err--' + lastErrType);
+}
+
+/**
+ * Gets user profile data
+ */
+export function getUserProfile(token) {
+    const username = 'dochead';      // TODO: Hardcoded!!
+
 }

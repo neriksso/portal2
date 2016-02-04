@@ -1,4 +1,5 @@
 import request from './fakeRequest';
+import $ from 'jquery'
 
 /**
  * Authentication lib
@@ -25,18 +26,28 @@ var auth = {
       callback(true);
       return;
     }
-    // Post a fake request (see below)
-    request.post('/login', { username, password }, (response) => {
-      // If the user was authenticated successfully, save a random token to the
-      // localStorage
-      if (response.authenticated) {
-        localStorage.token = response.token;
-        callback(true);
-      } else {
-        // If there was a problem authenticating the user, show an error on the
-        // form
-        callback(false, response.error);
-      }
+    var login = {
+      username: username,
+      password: password
+    };
+    $.ajax({
+      url: 'http://localhost:8000/'+'api-token-auth/',      // TODO: This is hardcoded!!
+      dataType: 'json',
+      type: 'POST',
+      data: login,
+      success: function (response) {
+        if (response.token) {
+          localStorage.token = response.token;
+          callback(true);
+        } else {
+          // If there was a problem authenticating the user, show an error on the
+          // form
+          callback(false, response.error);
+        }
+      }.bind(this),
+      error: function (xhr, status, err) {
+          callback(false, err);
+      }.bind(this)
     });
   },
   /**
