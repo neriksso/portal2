@@ -7,27 +7,26 @@ import $ from 'jquery'
 var userService = {
 
     // User Details
-    login(username, token, callback) {
-        if (this.anyElementsEmpty({ username, password})) {
+    getUserDetails(username, token, callback) {
+        if (this.anyElementsEmpty({ username, token })) {
             callback(false, {
                 type: "field-missing"
             });
             return;
         }
         $.ajax({
-            url: 'http://localhost:8000/' + 'api/' + username + '/',      // TODO: This is hardcoded!!
+            url: 'http://localhost:8000/' + 'api/users/' + username + '/',      // TODO: This is hardcoded!!
             dataType: 'json',
-            type: 'POST',
-            data: login,
+            type: 'GET',
+            headers: {
+                'Authorization': 'JWT ' + token
+            },
             success: function (response) {
-                if (response.token) {
-                    localStorage.token = response.token;
-                    callback(true);
-                } else {
-                    // If there was a problem authenticating the user, show an error on the
-                    // form
-                    callback(false, response.error);
-                }
+                console.log(response)
+                callback({
+                    success: true,
+                    response: response
+                });
             }.bind(this),
             error: function (xhr, status, err) {
                 callback(false, err);
@@ -35,5 +34,49 @@ var userService = {
         });
 
 
+    },
+    setUserDetails(username, token, data, callback) {
+        if (this.anyElementsEmpty({ username, token })) {
+            callback(false, {
+                type: "field-missing"
+            });
+            return;
+        }
+        $.ajax({
+            url: 'http://localhost:8000/' + 'api/users/' + username + '/',      // TODO: This is hardcoded!!
+            dataType: 'json',
+            type: 'PUT',
+            data: data,
+            headers: {
+                'Authorization': 'JWT ' + token
+            },
+            success: function (response) {
+                console.log(response)
+                callback({
+                    success: true,
+                    response: response
+                });
+            }.bind(this),
+            error: function (xhr, status, err) {
+                callback(false, err);
+            }.bind(this)
+        });
+
+
+    },
+    /**
+     * Checks if any elements of a JSON object are empty
+     * @param  {object} elements The object that should be checked
+     * @return {boolean}         True if there are empty elements, false if there aren't
+     */
+    anyElementsEmpty(elements) {
+        for (let element in elements) {
+            if (!elements[element]) {
+                return true;
+            }
+        }
+        return false;
     }
-}
+};
+
+module.exports = userService;

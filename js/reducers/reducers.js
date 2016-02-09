@@ -10,7 +10,7 @@
  *   });
  */
 
-import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST } from '../constants/AppConstants';
+import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST, GET_PROFILE } from '../constants/AppConstants';
 // Object.assign is not yet fully supported in all browsers, so we fallback to
 // a polyfill
 const assign = Object.assign || require('object.assign');
@@ -18,33 +18,55 @@ import auth from '../utils/auth';
 
 // The initial application state
 const initialState = {
-  formState: {
-    username: '',
-    password: ''
-  },
-  currentlySending: false,
-  loggedIn: auth.loggedIn()
+    formState: {
+        username: '',
+        password: ''
+    },
+    currentlySending: false,
+    loggedIn: auth.loggedIn(),
+    loginDetails: auth.getToken(),
+    profile: {
+        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        permissions: [],
+        credentials: [],
+        groups: []
+    }
 };
 
 // Takes care of changing the application state
 export function homeReducer(state = initialState, action) {
-  switch (action.type) {
-    case CHANGE_FORM:
-      return assign({}, state, {
-        formState: action.newState
-      });
-      break;
-    case SET_AUTH:
-      return assign({}, state, {
-        loggedIn: action.newState
-      });
-      break;
-    case SENDING_REQUEST:
-      return assign({}, state, {
-        currentlySending: action.sending
-      });
-      break;
-    default:
-      return state;
-  }
+    console.log(state)
+    console.log(action)
+    switch (action.type) {
+        case CHANGE_FORM:
+            return assign({}, state, {
+                formState: action.newState
+            });
+            break;
+        case SET_AUTH:
+            return assign({}, state, {
+                loggedIn: action.newState.success,
+                loginDetails: {
+                    username: action.newState.username,
+                    token: action.newState.token
+                }
+            });
+            break;
+        case SENDING_REQUEST:
+            return assign({}, state, {
+                currentlySending: action.sending
+            });
+            break;
+        case GET_PROFILE:
+            return assign({}, state, {
+                loggedIn: action.newState.success,
+                profile: action.newState.response
+            });
+            break;
+        default:
+            return state;
+    }
 }

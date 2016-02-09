@@ -24,10 +24,12 @@
  */
 
 import bcrypt from 'bcryptjs';
-import { SET_AUTH, CHANGE_FORM, SENDING_REQUEST } from '../constants/AppConstants';
+import { SET_AUTH, CHANGE_FORM, SENDING_REQUEST, GET_PROFILE } from '../constants/AppConstants';
+import { browserHistory } from 'react-router';
+
 import auth from '../utils/auth';
 import genSalt from '../utils/salt';
-import { browserHistory } from 'react-router';
+import userService from '../utils/userService';
 
 /**
  * Logs an user in
@@ -39,11 +41,11 @@ export function login(username, password) {
         // Show the loading indicator, hide the last error
         dispatch(sendingRequest(true));
         removeLastFormError();
-        auth.login(username, password, (success, err) => {
+        auth.login(username, password, (login_status, err) => {
             // When the request is finished, hide the loading indicator
             dispatch(sendingRequest(false));
-            dispatch(setAuthState(success));
-            if (success === true) {
+            dispatch(setAuthState(login_status));
+            if (login_status.success === true) {
                 // If the login worked, forward the user to the dashboard and clear the form
                 forwardTo('/dashboard');
                 dispatch(changeForm({
@@ -187,7 +189,27 @@ function removeLastFormError() {
 /**
  * Gets user profile data
  */
-export function getUserProfile(token) {
-    const username = 'dochead';      // TODO: Hardcoded!!
+export function getUserProfile(username, token) {
+    return (dispatch) => {
+        dispatch(sendingRequest(true));
+        userService.getUserDetails(username, token, (success, err) => {
+            dispatch(sendingRequest(false));
+            dispatch(setProfileState(success));
+        });
+    }
+}
 
+export function setUserProfile(username, token, data) {
+    return (dispatch) => {
+        dispatch(sendingRequest(true));
+        console.log(data);
+        userService.setUserDetails(username, token, data, (success, err) => {
+            dispatch(sendingRequest(false));
+            dispatch(setProfileState(success));
+        });
+    }
+}
+
+export function setProfileState(newState) {
+    return {type: GET_PROFILE, newState};
 }

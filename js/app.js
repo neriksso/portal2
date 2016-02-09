@@ -8,25 +8,25 @@
  */
 
 // Load the ServiceWorker, the Cache polyfill, the manifest.json file and the .htaccess file
-import 'file?name=[name].[ext]!../serviceworker.js';
-import 'file?name=[name].[ext]!../serviceworker-cache-polyfill.js';
+//import 'file?name=[name].[ext]!../serviceworker.js';
+//import 'file?name=[name].[ext]!../serviceworker-cache-polyfill.js';
 import 'file?name=[name].[ext]!../manifest.json';
 import 'file?name=[name].[ext]!../.htaccess';
 import 'file?name=[name].[ext]!../favicon.ico';
 import 'file?name=[name].[ext]!../favicon.png';
 
-//Check for ServiceWorker support before trying to install it
-if ('serviceWorker' in navigator) {
-    // Install ServiceWorker
-  navigator.serviceWorker.register('/serviceworker.js').then(() => {
-  }).catch((err) => {
-    // Installation failed
-    console.log('ServiceWorker registration failed, error:', err);
-  });
-} else {
-  // No ServiceWorker Support
-  console.log('ServiceWorker is not supported in this browser');
-}
+////Check for ServiceWorker support before trying to install it
+//if ('serviceWorker' in navigator) {
+//    // Install ServiceWorker
+//  navigator.serviceWorker.register('/serviceworker.js').then(() => {
+//  }).catch((err) => {
+//    // Installation failed
+//    console.log('ServiceWorker registration failed, error:', err);
+//  });
+//} else {
+//  // No ServiceWorker Support
+//  console.log('ServiceWorker is not supported in this browser');
+//}
 
 // Import all the third party stuff
 import React from 'react';
