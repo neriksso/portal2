@@ -206,6 +206,8 @@ export function setUserProfile(username, token, data) {
         userService.setUserDetails(username, token, data, (success, err) => {
             dispatch(sendingRequest(false));
             dispatch(setProfileState(success));
+            console.log(success)
+            console.log(err);
         });
     }
 }

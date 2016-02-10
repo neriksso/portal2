@@ -45,7 +45,7 @@ var userService = {
         $.ajax({
             url: 'http://localhost:8000/' + 'api/users/' + username + '/',      // TODO: This is hardcoded!!
             dataType: 'json',
-            type: 'PUT',
+            type: 'PATCH',
             data: data,
             headers: {
                 'Authorization': 'JWT ' + token
@@ -58,7 +58,7 @@ var userService = {
                 });
             }.bind(this),
             error: function (xhr, status, err) {
-                callback(false, err);
+                callback(xhr, err);
             }.bind(this)
         });
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { logout } from '../actions/AppActions';
 import { getUserProfile, setUserProfile } from '../actions/AppActions';
 import LoadingButton from './LoadingButton.react';
+import ReadOnlyCollection from './ReadOnlyCollection.react';
 import InlineEdit from 'react-edit-inline';
 
 
@@ -72,34 +73,19 @@ export default class Profile extends Component {
                         <p>
                             Groups: {this.props.profile.groups.length ? null : 'None'}
                         </p>
-                        {this.props.profile.groups.length ? (
-                            <ul>
-                                {this.props.profile.groups.map(function (object, i) {
-                                    return <li key={i}> {object}</li>;
-                                })}
-                            </ul>) : (null)}
+                        <ReadOnlyCollection collection={this.props.profile.groups} />
                     </li>
                     <li>
                         <p>
                             Credentials: {this.props.profile.credentials.length ? null : 'None'}
                         </p>
-                        {this.props.profile.credentials.length ? (
-                            <ul>
-                                {this.props.profile.credentials.map(function (object, i) {
-                                    return <li key={i}> {object}</li>;
-                                })}
-                            </ul>) : (null)}
+                        <ReadOnlyCollection collection={this.props.profile.credentials} />
                     </li>
                     <li>
                         <p>
                             Permissions: {this.props.profile.permissions.length ? null : 'None'}
                         </p>
-                        {this.props.profile.permissions.length ? (
-                            <ul>
-                                {this.props.profile.permissions.map(function (object, i) {
-                                    return <li key={i}> {object}</li>;
-                                })}
-                            </ul>) : (null)}
+                        <ReadOnlyCollection collection={this.props.profile.permissions} />
                     </li>
 
                 </ul>
