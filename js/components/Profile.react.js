@@ -26,9 +26,6 @@ export default class Profile extends Component {
     }
 
     dataChanged = (data) => {
-        // data = { description: "New validated text comes here" }
-        // Update your model from here
-        //console.log(data);
         this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.props.loginDetails.token, data))
     }
 
