@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { logout } from '../actions/AppActions';
-import { getUserProfile, setUserProfile } from '../actions/AppActions';
+import { getUserProfile, setUserProfile, clearErrors } from '../actions/AppActions';
 import LoadingButton from './LoadingButton.react';
 import ReadOnlyCollection from './ReadOnlyCollection.react';
 import InlineEdit from 'react-edit-inline';
 
 
 export default class Profile extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = { showConfirm: false };
+    }
 
     componentDidMount() {
         var info = this.props.username;
@@ -27,7 +32,19 @@ export default class Profile extends Component {
 
     dataChanged = (data) => {
         this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.props.loginDetails.token, data))
-    }
+    };
+
+    confirmMail = (event) => {
+        this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.props.loginDetails.token, this.state.data));
+        this.setState({showConfirm: false});
+    };
+
+    emailChanged = (data) => {
+        this.setState({
+            showConfirm: true,
+            data: data
+        });
+    };
 
     render() {
         return (
@@ -45,7 +62,12 @@ export default class Profile extends Component {
                                 activeClassName="editing"
                                 text={this.props.profile.first_name}
                                 paramName="first_name"
-                                change={this.dataChanged} />
+                                validate={this.customValidateText}
+                                change={this.dataChanged}
+                        />
+                        </p>
+                        <p>
+                            error: {this.props.errors.first_name}
                         </p>
                     </li>
                     <li>
@@ -56,6 +78,9 @@ export default class Profile extends Component {
                             paramName="last_name"
                             change={this.dataChanged} />
                         </p>
+                        <p>
+                            error: {this.props.errors.last_name}
+                        </p>
                     </li>
                     <li>
                         <p>
@@ -63,7 +88,14 @@ export default class Profile extends Component {
                             activeClassName="editing"
                             text={this.props.profile.email}
                             paramName="email"
-                            change={this.dataChanged} />
+                            change={this.emailChanged} />
+                        </p>
+                        {this.state.showConfirm ?
+                            <button onClick={this.confirmMail}>Confirm</button> :
+                            null
+                        }
+                        <p>
+                            error: {this.props.errors.email}
                         </p>
                     </li>
                     <li>
@@ -80,7 +112,7 @@ export default class Profile extends Component {
                     </li>
                     <li>
                         <p>
-                            Permissions: {this.props.profile.permissions.length ? null : 'None'}
+                            Custom Permissions: {this.props.profile.permissions.length ? null : 'None'}
                         </p>
                         <ReadOnlyCollection collection={this.props.profile.permissions} />
                     </li>

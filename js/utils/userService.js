@@ -29,7 +29,10 @@ var userService = {
                 });
             }.bind(this),
             error: function (xhr, status, err) {
-                callback(false, err);
+                callback({
+                    success: false,
+                    response: xhr
+                }, err);
             }.bind(this)
         });
 
@@ -58,7 +61,10 @@ var userService = {
                 });
             }.bind(this),
             error: function (xhr, status, err) {
-                callback(xhr, err);
+                callback({
+                    success: false,
+                    response: xhr.responseJSON
+                }, err);
             }.bind(this)
         });
 

@@ -10,7 +10,7 @@
  *   });
  */
 
-import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST, GET_PROFILE } from '../constants/AppConstants';
+import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST, GET_PROFILE, PATCH_PROFILE, ERROR_PROFILE } from '../constants/AppConstants';
 // Object.assign is not yet fully supported in all browsers, so we fallback to
 // a polyfill
 const assign = Object.assign || require('object.assign');
@@ -33,6 +33,8 @@ const initialState = {
         permissions: [],
         credentials: [],
         groups: []
+    },
+    profile_errors: {
     }
 };
 
@@ -63,8 +65,13 @@ export function homeReducer(state = initialState, action) {
         case GET_PROFILE:
             return assign({}, state, {
                 loggedIn: action.newState.success,
-                profile: action.newState.response
+                profile: action.newState.response,
+                profile_errors: {}
             });
+            break;
+        case ERROR_PROFILE:
+            var errors = assign({}, state.profile_errors, action.newState.response);
+            return assign({}, state, {profile_errors: errors});
             break;
         default:
             return state;

@@ -21,6 +21,7 @@ class HomePage extends Component {
         const { loggedIn } = this.props.data;
         const { loginDetails } = this.props.data;
         const { profile } = this.props.data;
+        const { profile_errors } = this.props.data;
 
         return (
             <article>
@@ -43,7 +44,7 @@ class HomePage extends Component {
                     </section>
 
                     {loggedIn ? (
-                        <Profile loginDetails={ loginDetails } dispatch={dispatch} profile={ profile }/>
+                        <Profile loginDetails={ loginDetails } dispatch={ dispatch } profile={ profile } errors={ profile_errors }/>
                     ) : (
                         <section className="text-section">
                             <h2>Portal Features</h2>

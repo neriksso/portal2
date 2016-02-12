@@ -10,3 +10,6 @@ export const CHANGE_FORM = 'CHANGE_FORM';
 export const SET_AUTH = 'SET_AUTH';
 export const SENDING_REQUEST = 'SENDING_REQUEST';
 export const GET_PROFILE = 'GET_PROFILE';
+export const PATCH_PROFILE = 'PATCH_PROFILE';
+export const ERROR_PROFILE = 'ERROR_PROFILE';
+export const ERROR_PROP = 'ERROR_PROP';

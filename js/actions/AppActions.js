@@ -24,8 +24,16 @@
  */
 
 import bcrypt from 'bcryptjs';
-import { SET_AUTH, CHANGE_FORM, SENDING_REQUEST, GET_PROFILE } from '../constants/AppConstants';
 import { browserHistory } from 'react-router';
+
+import { SET_AUTH,
+    CHANGE_FORM,
+    SENDING_REQUEST,
+    GET_PROFILE,
+    PATCH_PROFILE,
+    ERROR_PROFILE,
+    ERROR_PROP
+} from '../constants/AppConstants';
 
 import auth from '../utils/auth';
 import genSalt from '../utils/salt';
@@ -146,6 +154,22 @@ export function sendingRequest(sending) {
     return {type: SENDING_REQUEST, sending};
 }
 
+export function setProfileState(newState) {
+    return {type: GET_PROFILE, newState};
+}
+
+export function patchProfileState(newState) {
+    return {type: GET_PROFILE, newState};
+}
+
+export function errorProfileState(newState) {
+    return {type: ERROR_PROFILE, newState}
+}
+
+export function clearErrorProp(newState) {
+    return {type: ERROR_CLEAR, newState}
+}
+
 /**
  * Forwards the user
  * @param {string} location The route the user should be forwarded to
@@ -192,9 +216,9 @@ function removeLastFormError() {
 export function getUserProfile(username, token) {
     return (dispatch) => {
         dispatch(sendingRequest(true));
-        userService.getUserDetails(username, token, (success, err) => {
+        userService.getUserDetails(username, token, (response, err) => {
             dispatch(sendingRequest(false));
-            dispatch(setProfileState(success));
+            dispatch(setProfileState(response));
         });
     }
 }
@@ -203,15 +227,22 @@ export function setUserProfile(username, token, data) {
     return (dispatch) => {
         dispatch(sendingRequest(true));
         console.log(data);
-        userService.setUserDetails(username, token, data, (success, err) => {
+        userService.setUserDetails(username, token, data, (response, err) => {
             dispatch(sendingRequest(false));
-            dispatch(setProfileState(success));
-            console.log(success)
-            console.log(err);
+            if (response.success) {
+                dispatch(patchProfileState(response));
+            } else {
+                dispatch(errorProfileState(response));
+                console.log(response);
+                console.log(err);
+            }
         });
     }
 }
 
-export function setProfileState(newState) {
-    return {type: GET_PROFILE, newState};
+export function clearErrors(errorName) {
+    return (dispatch) => {
+        console.log(data);
+        dispatch(clearErrorProp(errorName));
+    }
 }

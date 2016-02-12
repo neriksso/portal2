@@ -13,14 +13,16 @@ import { connect } from 'react-redux';
 import auth from '../utils/auth';
 
 class App extends Component {
-  render() {
-    return(
-      <div className="wrapper">
-        <Nav loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails} history={this.props.history} location={this.props.location} dispatch={this.props.dispatch} currentlySending={this.props.data.currentlySending} />
-        { this.props.children }
-      </div>
-    )
-  }
+    render() {
+        return (
+            <div className="wrapper">
+                <Nav loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
+                     history={this.props.history} location={this.props.location} dispatch={this.props.dispatch}
+                     currentlySending={this.props.data.currentlySending}/>
+                { this.props.children }
+            </div>
+        )
+    }
 }
 
 export default App;
@@ -29,9 +31,9 @@ export default App;
 
 // Which props do we want to inject, given the global state?
 function select(state) {
-  return {
-    data: state
-  };
+    return {
+        data: state
+    };
 }
 
 // Wrap the component to inject dispatch and state into it
