@@ -19,11 +19,11 @@ export default class Profile extends Component {
         console.log(info);
         console.log(this.props.loginDetails);
         console.log(this.props.profile);
-        this._getUserDetails(this.props.loginDetails.username, this.props.loginDetails.token)
+        this._getUserDetails(this.props.loginDetails.username)
     }
 
     _getUserDetails(username, token) {
-        this.props.dispatch(getUserProfile(username, token));
+        this.props.dispatch(getUserProfile(username));
     }
 
     customValidateText(text) {
@@ -31,11 +31,11 @@ export default class Profile extends Component {
     }
 
     dataChanged = (data) => {
-        this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.props.loginDetails.token, data))
+        this.props.dispatch(setUserProfile(this.props.loginDetails.username, data))
     };
 
     confirmMail = (event) => {
-        this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.props.loginDetails.token, this.state.data));
+        this.props.dispatch(setUserProfile(this.props.loginDetails.username, this.state.data));
         this.setState({showConfirm: false});
     };
 
@@ -100,9 +100,8 @@ export default class Profile extends Component {
                     </li>
                     <li>
                         <p>
-                            Groups: {this.props.profile.groups.length ? null : 'None'}
+                            Group Path: <Link to="/groups" >Groups</Link>
                         </p>
-                        <ReadOnlyCollection collection={this.props.profile.groups} />
                     </li>
                     <li>
                         <p>
@@ -112,7 +111,7 @@ export default class Profile extends Component {
                     </li>
                     <li>
                         <p>
-                            Custom Permissions: {this.props.profile.permissions.length ? null : 'None'}
+                            All Permissions: {this.props.profile.permissions.length ? null : 'None'}
                         </p>
                         <ReadOnlyCollection collection={this.props.profile.permissions} />
                     </li>

@@ -34,56 +34,106 @@ import { SET_AUTH,
     ERROR_PROFILE,
     ERROR_PROP
 } from '../constants/AppConstants';
+import * as constants from '../constants/AppConstants';
+
 
 import auth from '../utils/auth';
 import genSalt from '../utils/salt';
 import userService from '../utils/userService';
+import Client from '../api/client';
+
+
+export function login(username, password) {
+    return function (dispatch) {
+        loginUserFromAPI(username, password).then((response) => {
+            dispatch(_doLogin(response));
+            forwardTo('/');
+        }, (err) => {
+            requestFailed(err)
+        });
+    }
+}
+
+export function _doLogin(response) {
+    localStorage.setItem('accessToken', response.data.token);
+    localStorage.setItem('username', response.stats.params.body.username);
+    return {
+        type: 'AUTH_USER_SUCCESS',
+        payload: response
+    };
+}
+
+
+export function olddoLogin(response) {
+    return function (dispatch) {
+        return [
+            dispatch(() => {
+                localStorage.setItem('accessToken', response.data.token);
+                localStorage.setItem('username', response.stats.params.body.username);
+
+            }),
+            dispatch(() => {
+                return {
+                    type: 'AUTH_USER',
+                    payload: response
+                };
+            })
+        ];
+    }
+}
 
 /**
  * Logs an user in
  * @param  {string} username The username of the user to be logged in
  * @param  {string} password The password of the user to be logged in
  */
-export function login(username, password) {
-    return (dispatch) => {
-        // Show the loading indicator, hide the last error
-        dispatch(sendingRequest(true));
-        removeLastFormError();
-        auth.login(username, password, (login_status, err) => {
-            // When the request is finished, hide the loading indicator
-            dispatch(sendingRequest(false));
-            dispatch(setAuthState(login_status));
-            if (login_status.success === true) {
-                // If the login worked, forward the user to the dashboard and clear the form
-                forwardTo('/dashboard');
-                dispatch(changeForm({
-                    username: "",
-                    password: ""
-                }));
-            } else {
-                requestFailed(err);
-            }
-        });
-    }
+export function oldlogin(username, password) {
+    return {
+        type: 'AUTH_USER',
+        payload: {
+            promise: loginUserFromAPI(username, password).then(response => {
+                if (response.data.token)
+                    console.log('login')
+                console.log(response);
+                localStorage.setItem('accessToken', response.data.token);
+                localStorage.setItem('username', response.stats.params.body.username);
+
+                forwardTo('/')
+            })
+        }
+    };
 }
 
-/**
- * Logs the current user out
- */
-export function logout() {
-    return (dispatch) => {
-        dispatch(sendingRequest(true));
-        auth.logout((success, err) => {
-            if (success === true) {
-                dispatch(sendingRequest(false));
-                dispatch(setAuthState(false));
-                browserHistory.replace(null, '/');
-            } else {
-                requestFailed(err);
-            }
-        });
-    }
+export function loginUserFromAPI(username, password) {
+    return Client.User.login({
+        'body': {
+            username: username,
+            password: password
+        }
+    }).then((result) => {
+        return result;
+    });
 }
+
+export function logout() {
+    return {
+        type: 'UNAUTH_USER',
+        payload: {
+            promise: logoutUser()
+        }
+    };
+}
+
+export function logoutUser() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('username');
+    forwardTo('/');
+    return changeForm({
+        username: "",
+        password: ""
+    });
+}
+
 
 /**
  * Registers a user
@@ -154,18 +204,6 @@ export function sendingRequest(sending) {
     return {type: SENDING_REQUEST, sending};
 }
 
-export function setProfileState(newState) {
-    return {type: GET_PROFILE, newState};
-}
-
-export function patchProfileState(newState) {
-    return {type: GET_PROFILE, newState};
-}
-
-export function errorProfileState(newState) {
-    return {type: ERROR_PROFILE, newState}
-}
-
 export function clearErrorProp(newState) {
     return {type: ERROR_CLEAR, newState}
 }
@@ -176,7 +214,7 @@ export function clearErrorProp(newState) {
  */
 function forwardTo(location) {
     console.log('forwardTo(' + location + ')');
-    browserHistory.pushState(location);
+    browserHistory.push(location);
 }
 
 let lastErrType = "";
@@ -210,39 +248,125 @@ function removeLastFormError() {
     form.classList.remove('js-form__err--' + lastErrType);
 }
 
-/**
- * Gets user profile data
- */
-export function getUserProfile(username, token) {
-    return (dispatch) => {
-        dispatch(sendingRequest(true));
-        userService.getUserDetails(username, token, (response, err) => {
-            dispatch(sendingRequest(false));
-            dispatch(setProfileState(response));
-        });
-    }
-}
-
-export function setUserProfile(username, token, data) {
-    return (dispatch) => {
-        dispatch(sendingRequest(true));
-        console.log(data);
-        userService.setUserDetails(username, token, data, (response, err) => {
-            dispatch(sendingRequest(false));
-            if (response.success) {
-                dispatch(patchProfileState(response));
-            } else {
-                dispatch(errorProfileState(response));
-                console.log(response);
-                console.log(err);
-            }
-        });
-    }
-}
-
 export function clearErrors(errorName) {
     return (dispatch) => {
         console.log(data);
         dispatch(clearErrorProp(errorName));
     }
+}
+
+export function getUserProfile(username) {
+    return {
+        type: 'GET_USER_PROFILE',
+        payload: {
+            promise: getUserProfileFromAPI(username),
+        }
+    };
+}
+
+export function getUserProfileFromAPI(username) {
+    return Client.User.getProfile({
+        username: username,
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
+
+export function getUserGroups(username) {
+    return {
+        type: 'GET_USER_GROUPS',
+        payload: {
+            promise: getUserGroupsFromAPI(username),
+        }
+    };
+}
+
+export function getAvailableUserGroups(username) {
+    return {
+        type: 'GET_AVAILABLE_USER_GROUPS',
+        payload: {
+            promise: getAvailableUserGroupsFromAPI(username),
+        }
+    };
+}
+
+export function getAllGroups(username) {
+    return function (dispatch) {
+        return [
+            dispatch(getUserGroups(username)),
+            dispatch(getAvailableUserGroups(username))
+        ];
+    }
+}
+
+export function setUserGroups(username, groupNames) {
+    return function (dispatch) {
+        userGroupsFromAPI(Client.User.setGroups, username, groupNames).then((result) => {
+            return dispatch(getAllGroups(username));
+        }, (err) => {
+            logger.error(err)
+        });
+    }
+}
+
+export function unsetUserGroups(username, groupNames) {
+    return function (dispatch) {
+        userGroupsFromAPI(Client.User.unsetGroups, username, groupNames).then((result) => {
+            return dispatch(getAllGroups(username));
+        }, (err) => {
+            logger.error(err)
+        });
+    }
+}
+
+export function getUserGroupsFromAPI(username) {
+    return Client.User.getGroups({
+        username: username,
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
+
+export function getAvailableUserGroupsFromAPI(username) {
+    return Client.User.getAvailableGroups({
+        username: username,
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
+
+export function userGroupsFromAPI(method, username, groupNames) {
+    return method({
+        username: username,
+        body: {
+            group_names: groupNames
+        },
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        console.log('return');
+        return result;
+    });
+}
+
+export function setUserProfile(username, data) {
+    return {
+        type: 'GET_USER_PROFILE',
+        payload: {
+            data: data,
+            promise: setUserProfileFromAPI(username, data)
+        }
+    };
+}
+
+export function setUserProfileFromAPI(username, data) {
+    return Client.User.patchProfile({
+        username: username,
+        body: data,
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
 }

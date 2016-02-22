@@ -12,8 +12,10 @@ import { connect } from 'react-redux';
 
 import Nav from '../Nav.react';
 import Profile from '../Profile.react';
-import { getUserProfile } from '../../actions/AppActions';
 
+function select(state) {
+
+}
 
 class HomePage extends Component {
     render() {

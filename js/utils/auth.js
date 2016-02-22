@@ -23,7 +23,12 @@ var auth = {
         // If there is a token in the localStorage, the user already is
         // authenticated
         if (this.loggedIn()) {
-            callback(true);
+            var login_details = this.getToken();
+            callback({
+                success: true,
+                username: login_details.username,
+                token: login_details.token
+            });
             return;
         }
         var login = {
@@ -37,7 +42,7 @@ var auth = {
             data: login,
             success: function (response) {
                 if (response.token) {
-                    localStorage.token = response.token;
+                    localStorage.accessToken = response.token;
                     localStorage.username = login.username;
                     callback({
                         success: true,
@@ -68,7 +73,7 @@ var auth = {
      * @return {boolean} True if there is a logged in user, false if there isn't
      */
     loggedIn() {
-        return !!localStorage.token;
+        return !!localStorage.accessToken;
     },
     /**
      * Returns login token from localstorage
@@ -76,8 +81,8 @@ var auth = {
      */
     getToken() {
         return {
-            username: 'dochead',          //TODO: Hardcoded
-            token: localStorage.token,
+            username: localStorage.username,          //TODO: Hardcoded
+            token: localStorage.accessToken,
         };
     },
     /**

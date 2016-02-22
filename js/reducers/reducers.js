@@ -11,6 +11,7 @@
  */
 
 import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST, GET_PROFILE, PATCH_PROFILE, ERROR_PROFILE } from '../constants/AppConstants';
+import * as constants from '../constants/AppConstants';
 // Object.assign is not yet fully supported in all browsers, so we fallback to
 // a polyfill
 const assign = Object.assign || require('object.assign');
@@ -32,46 +33,73 @@ const initialState = {
         email: '',
         permissions: [],
         credentials: [],
-        groups: []
+        groups: ''
     },
+    groups: [],
+    availableGroups: [],
     profile_errors: {
     }
 };
 
+function dictifyMapperSmithError(err) {
+    return err[0];
+}
+
+function flattenGroups(groups, val) {
+    return groups.map(function (object, i) {
+        return [ i, object.pk, object.name, val ]
+    })
+}
 // Takes care of changing the application state
 export function homeReducer(state = initialState, action) {
-    console.log(state)
-    console.log(action)
     switch (action.type) {
         case CHANGE_FORM:
             return assign({}, state, {
                 formState: action.newState
             });
             break;
-        case SET_AUTH:
-            return assign({}, state, {
-                loggedIn: action.newState.success,
-                loginDetails: {
-                    username: action.newState.username,
-                    token: action.newState.token
-                }
+        case constants.AUTH_USER_SUCCESS:
+            var loginDetails = assign({}, state.loginDetails, {
+                token: action.payload.token,
+                username: action.payload.stats.params.body.username
             });
+            return assign({}, state, {
+                loggedIn: true,
+                loginDetails: loginDetails
+            });
+            break;
+        case constants.UNAUTH_USER:
+            initialState.formState = {
+                username: '',
+                password: ''
+            };
+            return assign({}, state, initialState);
             break;
         case SENDING_REQUEST:
             return assign({}, state, {
                 currentlySending: action.sending
             });
             break;
-        case GET_PROFILE:
+        case constants.GET_USER_PROFILE_SUCCESS:
             return assign({}, state, {
-                loggedIn: action.newState.success,
-                profile: action.newState.response,
+                loggedIn: true,
+                profile: action.payload.data,
                 profile_errors: {}
             });
             break;
-        case ERROR_PROFILE:
-            var errors = assign({}, state.profile_errors, action.newState.response);
+        case constants.GET_USER_PROFILE_FAIL:
+            var errors = assign({}, state.profile_errors, dictifyMapperSmithError(action.payload.err));
             return assign({}, state, {profile_errors: errors});
+            break;
+        case constants.GET_USER_GROUPS_SUCCESS:
+            return assign({}, state, {
+                groups: flattenGroups(action.payload.data, true)
+            });
+            break;
+        case constants.GET_AVAILABLE_USER_GROUPS_SUCCESS:
+            return assign({}, state, {
+                availableGroups: flattenGroups(action.payload.data, false)
+            });
             break;
         default:
             return state;
