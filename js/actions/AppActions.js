@@ -23,7 +23,6 @@
  *    created in the second step
  */
 
-import bcrypt from 'bcryptjs';
 import { browserHistory } from 'react-router';
 
 import { SET_AUTH,
@@ -141,39 +140,7 @@ export function logoutUser() {
  * @param  {string} password The password of the new user
  */
 export function register(username, password) {
-    return (dispatch) => {
-        // Show the loading indicator, hide the last error
-        dispatch(sendingRequest(true));
-        removeLastFormError();
-        // Generate salt for password encryption
-        const salt = genSalt(username);
-        // Encrypt password
-        bcrypt.hash(password, salt, (err, hash) => {
-            // Something wrong while hashing
-            if (err) {
-                requestFailed({
-                    type: 'failed'
-                });
-                return;
-            }
-            // Use auth.js to fake a request
-            auth.register(username, hash, (success, err) => {
-                // When the request is finished, hide the loading indicator
-                dispatch(sendingRequest(false));
-                dispatch(setAuthState(success));
-                if (success) {
-                    // If the register worked, forward the user to the homepage and clear the form
-                    forwardTo('/dashboard');
-                    dispatch(changeForm({
-                        username: "",
-                        password: ""
-                    }));
-                } else {
-                    requestFailed(err);
-                }
-            });
-        });
-    }
+    alert('IMPLEMETATIONError');
 }
 
 /**

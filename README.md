@@ -1,6 +1,6 @@
 # Login Flow
 
-This application demonstrates what a React.js based register/login workflow might look like on the Frontend. I used my [react-boilerplate](https://github.com/mxstbr/react-boilerplate) as a starting point — the app thus uses  Redux, PostCSS, react-router, ServiceWorker, AppCache, bcrypt and lots more.
+This application demonstrates what a React.js based register/login workflow might look like on the Frontend. I used my [react-boilerplate](https://github.com/mxstbr/react-boilerplate) as a starting point — the app thus uses  Redux, PostCSS, react-router, ServiceWorker, AppCache and lots more.
 
 The default username is `AzureDiamond` and the default password is `hunter2`, but feel free to register new users! The registered users are saved to localStorage, so they'll persist across page reloads.
 
@@ -10,7 +10,7 @@ The default username is `AzureDiamond` and the default password is `hunter2`, bu
 
 Everything authentication related is collected in the [`js/utils`](js/utils) folder. The actual auth happens in [`auth.js`](js/utils/auth.js), using [`fakeRequest.js`](js/utils/fakeRequest.js) and [`fakeServer.js`](js/utils/fakeServer.js).
 
-`fakeRequest` is a fake XMLHttpRequest wrapper with a syntax similar to [`request.js`](https://github.com/request/request). It simulates network latency too, so loading states are visible. `fakeServer` responds to the fake HTTP requests and pretends to be a real server, storing the current users in localStorage with the passwords encrypted using `bcrypt`.
+`fakeRequest` is a fake XMLHttpRequest wrapper with a syntax similar to [`request.js`](https://github.com/request/request). It simulates network latency too, so loading states are visible. `fakeServer` responds to the fake HTTP requests and pretends to be a real server, storing the current users in localStorage with the passwords encrypted using ``.
 
 To change it to real authentication, you’d only have to import `request.js` instead of `fakeRequest.js` and it should work! *(Provided you have a server somewhere and the endpoints configured)*
 
@@ -92,7 +92,7 @@ The folder structure of the JS files reflects how [Redux](https://github.com/gae
 
 ### Authentication
 
-Authentication happens in `js/utils/auth.js`, using `fakeRequest.js` and `fakeServer.js`. `fakeRequest` is a fake XMLHttpRequest wrapper with a similar syntax to `request.js` which simulates network latency. `fakeServer` responds to the fake HTTP requests and pretends to be a real server, storing the current users in localStorage with the passwords encrypted using `bcrypt`.
+Authentication happens in `js/utils/auth.js`, using `fakeRequest.js` and `fakeServer.js`. `fakeRequest` is a fake XMLHttpRequest wrapper with a similar syntax to `request.js` which simulates network latency. `fakeServer` responds to the fake HTTP requests and pretends to be a real server, storing the current users in localStorage with the passwords encrypted using ``.
 To change it to real authentication, you'd only have to import `request.js` instead of `fakeRequest.js` and have a server running somewhere.
 
 ## Opinionated features

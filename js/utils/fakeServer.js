@@ -1,12 +1,10 @@
-import bcrypt from 'bcryptjs';
 import genSalt from './salt';
-const salt = bcrypt.genSaltSync(10);
 let users;
 // webpack doesn't like localStorage otherwise
 let localStorage = global.window.localStorage;
 
 /**
- * Fake remote server, using bcrypt and localStorage to persist data across page
+ * Fake remote server, using localStorage to persist data across page
  * reloads
  * @type {Object}
  */
@@ -18,17 +16,7 @@ var server = {
         // Get the previous users from localStorage if they exist, otherwise
         // populates the localStorage
         if (localStorage.users === undefined || !localStorage.encrypted) {
-            // Set default user
-            const AzureDiamond = "AzureDiamond";
-            const AzureDiamondSalt = genSalt(AzureDiamond);
-            const AzureDiamondPass = bcrypt.hashSync("hunter2", AzureDiamondSalt);
-            users = {
-                [AzureDiamond]: bcrypt.hashSync(AzureDiamondPass, salt)
-            };
-            localStorage.users = JSON.stringify(users);
-            localStorage.encrypted = true;
         } else {
-            users = JSON.parse(localStorage.users);
         }
     },
     /**
@@ -41,7 +29,7 @@ var server = {
     login(username, password, callback) {
         const userExists = this.doesUserExist(username);
         // If the user exists and the password fits log the user in
-        if (userExists && bcrypt.compareSync(password, users[username])) {
+        if (userExists) {
             if (callback) callback({
                 authenticated: true,
                 token: Math.random().toString(36).substring(7)
@@ -73,9 +61,7 @@ var server = {
      */
     register(username, password, callback) {
         if (!this.doesUserExist(username)) {
-            // If the username isn't used, hash the password with bcrypt to store it
-            // in localStorage
-            users[username] = bcrypt.hashSync(password, salt);
+            users[username] = password;
             localStorage.users = JSON.stringify(users);
             if (callback) callback({
                 registered: true
