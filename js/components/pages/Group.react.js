@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Nav from '../Nav.react';
+import TopNav from '../TopNav.react.js';
 import GroupEdit from '../GroupEdit.react';
 import GroupList from '../GroupList.react';
 

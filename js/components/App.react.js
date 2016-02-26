@@ -8,19 +8,21 @@
 
 // Import stuff
 import React, { Component } from 'react';
-import Nav from './Nav.react';
+import TopNav from './TopNav.react.js';
 import { connect } from 'react-redux';
 import auth from '../utils/auth';
+const mainStyle = require('../../css/main.sass');
 
 class App extends Component {
     render() {
         return (
-            <div className="wrapper">
-                <Nav loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
+            <main>
+                <TopNav loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
                      history={this.props.history} location={this.props.location} dispatch={this.props.dispatch}
                      currentlySending={this.props.data.currentlySending}/>
                 { this.props.children }
-            </div>
+
+            </main>
         )
     }
 }

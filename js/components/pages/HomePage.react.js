@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import Nav from '../Nav.react';
+import TopNav from '../TopNav.react.js';
 import Profile from '../Profile.react';
 
 function select(state) {
