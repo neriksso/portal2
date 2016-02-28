@@ -8,20 +8,27 @@
 
 // Import stuff
 import React, { Component } from 'react';
-import TopNav from './TopNav.react.js';
+import TopNav from './TopNav.react';
+import NavMain from './NavMain';
+import SideBar from './Sidebar.react';
 import { connect } from 'react-redux';
 import auth from '../utils/auth';
-const mainStyle = require('../../css/main.sass');
+import { Row } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap-theme.css'
+const mainStyle = require('../../css/main.scss');
 
 class App extends Component {
     render() {
         return (
             <main>
-                <TopNav loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
-                     history={this.props.history} location={this.props.location} dispatch={this.props.dispatch}
-                     currentlySending={this.props.data.currentlySending}/>
+                <Row className="mainContent">
+                    <NavMain navLinks={ this.props.data.topNavLinks } />
+                <SideBar loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
+                         history={this.props.history} location={this.props.location} dispatch={this.props.dispatch}
+                         currentlySending={this.props.data.currentlySending} navLinks={ this.props.data.sideNavLinks }/>
                 { this.props.children }
-
+                    </Row>
             </main>
         )
     }

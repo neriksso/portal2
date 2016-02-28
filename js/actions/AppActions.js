@@ -223,6 +223,7 @@ export function clearErrors(errorName) {
 }
 
 export function getUserProfile(username) {
+    console.log(username);
     return {
         type: 'GET_USER_PROFILE',
         payload: {

@@ -15,6 +15,7 @@ import * as constants from '../constants/AppConstants';
 // Object.assign is not yet fully supported in all browsers, so we fallback to
 // a polyfill
 const assign = Object.assign || require('object.assign');
+import { initialProfile } from '../constants/AppObjectConstants';
 import auth from '../utils/auth';
 
 // The initial application state
@@ -26,20 +27,46 @@ const initialState = {
     currentlySending: false,
     loggedIn: auth.loggedIn(),
     loginDetails: auth.getToken(),
-    profile: {
-        username: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        permissions: [],
-        credentials: [],
-        groups: ''
-    },
+    profile: Object.create(initialProfile),
     groups: [],
     availableGroups: [],
-    profile_errors: {
-    }
+    profile_errors: {},
+    topNavLinks: getTopNavLinks(auth.loggedIn()),
+    sideNavLinks: getSideNavLinks(auth.loggedIn())
 };
+
+function getTopNavLinks(loginState) {
+    var linkList = [
+        {
+            link: '/support',
+            title: 'Support'
+        }
+    ];
+
+    if (loginState) {
+        return [{
+            link: '/logout',
+            title: 'Logout'
+        }].concat(linkList);
+    } else {
+        return [{
+            link: '/login',
+            title: 'Login'
+        }].concat(linkList);
+    }
+}
+
+function getSideNavLinks(loginState) {
+    var linkList = [
+        {
+            link: '/support',
+            title: 'Support'
+        }
+    ];
+
+    return linkList
+}
+
 
 function dictifyMapperSmithError(err) {
     return err[0];
@@ -47,9 +74,24 @@ function dictifyMapperSmithError(err) {
 
 function flattenGroups(groups, val) {
     return groups.map(function (object, i) {
-        return [ i, object.pk, object.name, val ]
+        return [i, object.pk, object.name, val]
     })
 }
+
+function _logoutState() {
+    var unauthState = Object.create(initialState);
+    unauthState.formState = {
+        username: '',
+        password: ''
+    };
+    unauthState.loggedIn = false;
+    unauthState.loginDetails = {};
+    unauthState.profile = Object.create(initialProfile);
+    unauthState.topNavLinks = getTopNavLinks(false);
+
+    return unauthState;
+}
+
 // Takes care of changing the application state
 export function homeReducer(state = initialState, action) {
     switch (action.type) {
@@ -65,15 +107,13 @@ export function homeReducer(state = initialState, action) {
             });
             return assign({}, state, {
                 loggedIn: true,
-                loginDetails: loginDetails
+                loginDetails: loginDetails,
+                topNavLinks: getTopNavLinks(true)
             });
             break;
         case constants.UNAUTH_USER:
-            initialState.formState = {
-                username: '',
-                password: ''
-            };
-            return assign({}, state, initialState);
+            var unauthState = _logoutState();
+            return assign({}, state, unauthState);
             break;
         case SENDING_REQUEST:
             return assign({}, state, {

@@ -13,9 +13,6 @@ import LoadingButton from './LoadingButton.react';
 import { Navbar, Nav } from 'react-bootstrap'
 //var Button = require('./components/button').Button;
 
-var bootstrap = require('bootstrap');
-var bootstrapStyle = require("../../node_modules/bootstrap/dist/css/bootstrap.css");
-
 
 class TopNav extends Component {
   render() {

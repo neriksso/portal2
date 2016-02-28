@@ -18,7 +18,8 @@
     "superagent": "",
     "js-logger": "",
     "bootstrap": "",
-    "bootstrap-webpack": "",
+    "bootstrap-sass": "",
+    "bootstrap-loader": "",
     "extract-text-webpack-plugin": "",
     "react-bootstrap": "",
     "less-loader": "^0.6.2",
@@ -48,15 +49,17 @@
     "url-loader": "^0.5.6",
     "node-sass": "",
     "sass-loader": "",
-    "webpack": "^1.12.1",
-    "webpack-dev-server": "^1.11.0"
+    "webpack": "^1.12.4",
+    "webpack-dev-middleware": "^1.2.0",
+    "webpack-hot-middleware": "^2.5.0",
+    "nodemon": "^1.8.1"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/mxstbr/react-boilerplate.git"
   },
   "scripts": {
-    "start": "NODE_ENV=development node server.js",
+    "start": "nodemon --watch js --ext html server.js",
     "build": "NODE_ENV=production webpack --config webpack.prod.config.js --progress --colors -p"
   },
   "license": "MIT"

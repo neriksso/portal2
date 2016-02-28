@@ -42,6 +42,7 @@ import { homeReducer } from './reducers/reducers';
 // Import the components used as pages
 import HomePage from './components/pages/HomePage.react';
 import LoginPage from './components/pages/LoginPage.react';
+import LogoutPage from './components/pages/LogoutPage.react';
 import RegisterPage from './components/pages/RegisterPage.react';
 import Dashboard from './components/pages/Dashboard.react';
 import NotFound from './components/pages/NotFound.react';
@@ -107,6 +108,7 @@ ReactDOM.render(
             <Route component={App}>
                 <Route path="/" component={HomePage}/>
                 <Route path="/login" component={LoginPage}/>
+                <Route path="/logout" component={LogoutPage}/>
                 <Route path="/register" component={RegisterPage} onEnter={requireAuth}/>
                 <Route path="/dashboard" component={Dashboard} onEnter={requireAuth}/>
                 <Route path="/groups" component={Group} onEnter={requireAuth}/>
