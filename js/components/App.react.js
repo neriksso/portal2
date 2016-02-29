@@ -13,22 +13,44 @@ import NavMain from './NavMain';
 import SideBar from './Sidebar.react';
 import { connect } from 'react-redux';
 import auth from '../utils/auth';
-import { Row } from 'react-bootstrap'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap/dist/css/bootstrap-theme.css'
+import { getUserProfile } from '../actions/AppActions';
+import { Row, Col } from 'react-bootstrap';
+import { Transition } from 'react-overlays';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 const mainStyle = require('../../css/main.scss');
 
 class App extends Component {
+
+    componentDidMount() {
+        var info = this.props.username;
+        this._getUserDetails(this.props.data.loginDetails.username)
+    }
+
+    _getUserDetails(username, token) {
+        this.props.dispatch(getUserProfile(username));
+    }
+
     render() {
+        console.log(this.props);
+        const { loggedIn } = this.props.data;
         return (
             <main>
                 <Row className="mainContent">
-                    <NavMain navLinks={ this.props.data.topNavLinks } />
-                <SideBar loggedIn={this.props.data.loggedIn} loginDetails={this.props.data.loginDetails}
-                         history={this.props.history} location={this.props.location} dispatch={this.props.dispatch}
-                         currentlySending={this.props.data.currentlySending} navLinks={ this.props.data.sideNavLinks }/>
-                { this.props.children }
-                    </Row>
+                    <NavMain navLinks={ this.props.data.topNavLinks }/>
+                        <Col md={3}>
+
+                            <SideBar loggedIn={ loggedIn } loginDetails={this.props.data.loginDetails}
+                                     history={this.props.history} location={this.props.location}
+                                     dispatch={this.props.dispatch}
+                                     profile={this.props.data.profile} navLinks={ this.props.data.sideNavLinks }/>
+                        </Col>
+                    <Col md={9}>
+                        <div className="content-window">
+                        { this.props.children }
+                            </div>
+                    </Col>
+                </Row>
             </main>
         )
     }

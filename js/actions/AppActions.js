@@ -45,6 +45,9 @@ import Client from '../api/client';
 export function login(username, password) {
     return function (dispatch) {
         loginUserFromAPI(username, password).then((response) => {
+            localStorage.setItem('accessToken', response.data.token);
+            localStorage.setItem('username', response.stats.params.body.username);
+
             dispatch(_doLogin(response));
             forwardTo('/');
         }, (err) => {
@@ -53,7 +56,7 @@ export function login(username, password) {
     }
 }
 
-export function _doLogin(response) {
+export function old_doLogin(response) {
     localStorage.setItem('accessToken', response.data.token);
     localStorage.setItem('username', response.stats.params.body.username);
     return {
@@ -63,20 +66,15 @@ export function _doLogin(response) {
 }
 
 
-export function olddoLogin(response) {
+export function _doLogin(response) {
     return function (dispatch) {
         return [
-            dispatch(() => {
-                localStorage.setItem('accessToken', response.data.token);
-                localStorage.setItem('username', response.stats.params.body.username);
-
-            }),
-            dispatch(() => {
-                return {
-                    type: 'AUTH_USER',
+            dispatch(getUserProfile(response.stats.params.body.username)),
+            dispatch({
+                    type: 'AUTH_USER_SUCCESS',
                     payload: response
-                };
-            })
+                }
+            )
         ];
     }
 }

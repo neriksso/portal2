@@ -27,13 +27,15 @@ const initialState = {
     currentlySending: false,
     loggedIn: auth.loggedIn(),
     loginDetails: auth.getToken(),
-    profile: Object.create(initialProfile),
+    profile: Object.assign({}, initialProfile),
     groups: [],
     availableGroups: [],
     profile_errors: {},
     topNavLinks: getTopNavLinks(auth.loggedIn()),
     sideNavLinks: getSideNavLinks(auth.loggedIn())
 };
+
+console.log(initialState);
 
 function getTopNavLinks(loginState) {
     var linkList = [
@@ -59,8 +61,8 @@ function getTopNavLinks(loginState) {
 function getSideNavLinks(loginState) {
     var linkList = [
         {
-            link: '/support',
-            title: 'Support'
+            link: '/profile',
+            title: 'Profile'
         }
     ];
 
@@ -94,6 +96,10 @@ function _logoutState() {
 
 // Takes care of changing the application state
 export function homeReducer(state = initialState, action) {
+    console.log('Reducer');
+    console.log(state);
+    console.log(action);
+
     switch (action.type) {
         case CHANGE_FORM:
             return assign({}, state, {

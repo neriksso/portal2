@@ -28,23 +28,6 @@ class HomePage extends Component {
         return (
             <article>
                 <div>
-                    <section className="text-section">
-                        {/* Change the copy based on the authentication status */}
-                        {loggedIn ? (
-                            <h1>You have logged in, the cake was a lie.</h1>
-                        ) : (
-                            <h1>Welcome, please login to the portal, there is cake.</h1>
-                        )}
-                        {loggedIn ? (
-                            <Link to="/dashboard" className="btn btn--dash">Dashboard</Link>
-                        ) : (
-                            <div>
-                                <Link to="/login" className="btn btn--login">Login</Link>
-                                <Link to="/register" className="btn btn--register">Register</Link>
-                            </div>
-                        )}
-                    </section>
-
                     {loggedIn ? (
                         <Profile loginDetails={ loginDetails } dispatch={ dispatch } profile={ profile } errors={ profile_errors }/>
                     ) : (

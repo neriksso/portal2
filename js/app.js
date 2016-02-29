@@ -43,6 +43,7 @@ import { homeReducer } from './reducers/reducers';
 import HomePage from './components/pages/HomePage.react';
 import LoginPage from './components/pages/LoginPage.react';
 import LogoutPage from './components/pages/LogoutPage.react';
+import Profile from './components/pages/ProfilePage.react';
 import RegisterPage from './components/pages/RegisterPage.react';
 import Dashboard from './components/pages/Dashboard.react';
 import NotFound from './components/pages/NotFound.react';
@@ -109,6 +110,7 @@ ReactDOM.render(
                 <Route path="/" component={HomePage}/>
                 <Route path="/login" component={LoginPage}/>
                 <Route path="/logout" component={LogoutPage}/>
+                <Route path="/profile" component={Profile}/>
                 <Route path="/register" component={RegisterPage} onEnter={requireAuth}/>
                 <Route path="/dashboard" component={Dashboard} onEnter={requireAuth}/>
                 <Route path="/groups" component={Group} onEnter={requireAuth}/>

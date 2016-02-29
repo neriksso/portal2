@@ -2,17 +2,25 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { logout } from '../actions/AppActions';
 import LoadingButton from './LoadingButton.react';
-import { Navbar, Nav, Glyphicon, Col, Button } from 'react-bootstrap'
+import { Navbar, Nav, Glyphicon, Col, Button } from 'react-bootstrap';
+import { Transition } from 'react-overlays';
 
 class SideBar extends Component {
     render() {
         const { navLinks } = this.props;
-        console.log(navLinks);
+        console.log(this.props);
         let links = Object.keys(navLinks).map(this._renderNavItem.bind(this));
 
         return (
-            <Col md={3}>
-                <div className="profile-sidebar">
+            <div className="profile-sidebar">
+                <Transition
+                    in={ this.props.loggedIn }
+                    timeout={ 500 }
+                    className='fade'
+                    enteredClassName='in'
+                    enteringClassName='in'
+                >
+                    <div>
                     <div className="profile-userpic">
                         <img
                             src="https://zippy.gfycat.com/WellwornDelightfulBlueshark.gif"
@@ -20,23 +28,20 @@ class SideBar extends Component {
                     </div>
                     <div className="profile-usertitle">
                         <div className="profile-usertitle-name">
-                            Marcus Doe
+                            { this.props.profile.first_name } { this.props.profile.last_name }
                         </div>
                         <div className="profile-usertitle-job">
                             Developer
                         </div>
-                    </div>
-                    <div className="profile-userbuttons">
-                        <Button bsSize="small" bsStyle="success" >Follow</Button>
-                        <Button bsSize="small" bsStyle="danger">Message</Button>
                     </div>
                     <div className="profile-usermenu">
                         <Nav>
                             { links }
                         </Nav>
                     </div>
-                </div>
-            </Col>
+                        </div>
+                </Transition>
+            </div>
         );
     }
 
