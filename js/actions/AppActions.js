@@ -56,16 +56,6 @@ export function login(username, password) {
     }
 }
 
-export function old_doLogin(response) {
-    localStorage.setItem('accessToken', response.data.token);
-    localStorage.setItem('username', response.stats.params.body.username);
-    return {
-        type: 'AUTH_USER_SUCCESS',
-        payload: response
-    };
-}
-
-
 export function _doLogin(response) {
     return function (dispatch) {
         return [
@@ -77,28 +67,6 @@ export function _doLogin(response) {
             )
         ];
     }
-}
-
-/**
- * Logs an user in
- * @param  {string} username The username of the user to be logged in
- * @param  {string} password The password of the user to be logged in
- */
-export function oldlogin(username, password) {
-    return {
-        type: 'AUTH_USER',
-        payload: {
-            promise: loginUserFromAPI(username, password).then(response => {
-                if (response.data.token)
-                    console.log('login')
-                console.log(response);
-                localStorage.setItem('accessToken', response.data.token);
-                localStorage.setItem('username', response.stats.params.body.username);
-
-                forwardTo('/')
-            })
-        }
-    };
 }
 
 export function loginUserFromAPI(username, password) {
