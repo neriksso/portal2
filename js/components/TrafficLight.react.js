@@ -23,10 +23,11 @@ export default class TrafficLight extends Component {
         const { dispatch, statuses, statuses_errors, trafficlights, url  } = this.props;
         var trafficlight = get(trafficlights, url, {units: []});
         return (
-                <ul>
+                <ul className="trafficlights">
                     {trafficlight.units.map(function(unit) {
                         return <TrafficLightUnit unit={unit} key={unit.id} dispatch={dispatch} statuses={statuses}  statuses_errors={statuses_errors} />;
                     })}
+                    <div className="clearfix" />
                 </ul>
         );
     }

@@ -24,11 +24,16 @@ export default class TrafficLightUnit extends Component {
 
     render() {
         const { unit, key, statuses } = this.props;
-        const style = {
+        const circleStyle = {
             backgroundColor: unit.status.color
         };
+        const divStyle = {
+            width: "50px",
+            height: "50px"
+        }
         return (
-                <li key={key} style={style} onClick={this._editUnit} title={unit.notes}><b>{unit.status.label}</b> - {unit.value}
+                <li key={key}>
+                    <div className="circle" style={circleStyle} onClick={this._editUnit}>{unit.value}</div>
                     <Modal show={this.state.showModal} onHide={this._close}>
                         <h1>Edit</h1>
                         <ul>

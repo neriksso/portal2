@@ -15,3 +15,26 @@ body {
   background: #fff;
   min-height: 460px;
 }
+
+.circle {
+  height: 30px;
+  width: 30px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: yellow;
+}
+
+.trafficlights {
+  list-style-type: none;
+  display: inline-block;
+}
+
+.trafficlights li {
+  float: left;
+}
+
+.trafficlights:after {
+  clear: both;
+}
