@@ -32,7 +32,10 @@ const initialState = {
     availableGroups: [],
     profile_errors: {},
     topNavLinks: getTopNavLinks(auth.loggedIn()),
-    sideNavLinks: getSideNavLinks(auth.loggedIn())
+    sideNavLinks: getSideNavLinks(auth.loggedIn()),
+    projects: [],
+    projects_errors: {},
+    trafficlights: {}
 };
 
 console.log(initialState);
@@ -145,6 +148,25 @@ export function homeReducer(state = initialState, action) {
         case constants.GET_AVAILABLE_USER_GROUPS_SUCCESS:
             return assign({}, state, {
                 availableGroups: flattenGroups(action.payload.data, false)
+            });
+            break;
+        case constants.GET_PROJECTS_FAIL:
+            var errors = assign({}, state.projects_errors, dictifyMapperSmithError(action.payload.err));
+            return assign({}, state, {projects__errors: errors});
+            break;
+        case constants.GET_PROJECTS_SUCCESS:
+            return assign({}, state, {
+                projects: action.payload.data
+            });
+            break;
+        case constants.GET_TRAFFICLIGHT_FAIL:
+            var errors = assign({}, state.traffic_light_errors, dictifyMapperSmithError(action.payload.err));
+            return assign({}, state, {traffic_light_errors: errors});
+            break;
+        case constants.GET_TRAFFICLIGHT_SUCCESS:
+            var trafficlights = assign({}, state.trafficlights, {[action.payload.stats.url]: action.payload.data});
+            return assign({}, state, {
+                trafficlights: trafficlights
             });
             break;
         default:

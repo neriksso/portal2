@@ -9,10 +9,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import {getProjects} from '../../actions/AppActions';
+import Projects from '../Projects.react.js';
 
 class HomePage extends Component {
     render() {
-        const { loggedIn } = this.props.data;
+        const dispatch = this.props.dispatch;
+        const { loggedIn, projects, trafficlights, projects_errors } = this.props.data;
         return (
             <article>
                 <div>
@@ -23,10 +26,16 @@ class HomePage extends Component {
                         ) : (
                             <h1>Welcome, please login to the portal, there is cake.</h1>
                         )}
+                        <button className="btn btn-default" onClick={::this._click}>Get Projects</button>
+                        <Projects dispatch={ dispatch } projects={ projects } errors={ projects_errors } trafficlights={trafficlights}/>
                     </section>
                 </div>
             </article>
         );
+    }
+
+    _click() {
+        this.props.dispatch(getProjects());
     }
 
 }

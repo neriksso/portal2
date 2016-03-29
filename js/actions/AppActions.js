@@ -304,3 +304,38 @@ export function setUserProfileFromAPI(username, data) {
         return result;
     });
 }
+
+export function getProjects() {
+    return {
+        type: 'GET_PROJECTS',
+        payload: {
+            promise: getProjectsFromAPI(),
+        }
+    };
+}
+
+export function getProjectsFromAPI() {
+    return Client.Reports.getProjects({
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
+
+export function getTrafficLight(url) {
+    return {
+        type: 'GET_TRAFFICLIGHT',
+        payload: {
+            promise: getTrafficLightFromAPI(url),
+        }
+    };
+}
+
+export function getTrafficLightFromAPI(url) {
+    return Client.Reports.getTrafficLightByUrl({
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'},
+        url: url
+    }).then((result) => {
+        return result;
+    });
+}
