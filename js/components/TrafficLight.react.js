@@ -12,7 +12,6 @@ export default class TrafficLight extends Component {
     }
 
     componentDidMount() {
-        console.log('componentdidmount');
         this._getTrafficLight(this.props.url);
     }
 
@@ -21,12 +20,12 @@ export default class TrafficLight extends Component {
     }
 
     render() {
-        const { url, trafficlights } = this.props;
+        const { dispatch, statuses, statuses_errors, trafficlights, url  } = this.props;
         var trafficlight = get(trafficlights, url, {units: []});
         return (
                 <ul>
                     {trafficlight.units.map(function(unit) {
-                        return <TrafficLightUnit unit={unit} />;
+                        return <TrafficLightUnit unit={unit} key={unit.id} dispatch={dispatch} statuses={statuses}  statuses_errors={statuses_errors} />;
                     })}
                 </ul>
         );

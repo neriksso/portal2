@@ -15,7 +15,7 @@ import Projects from '../Projects.react.js';
 class HomePage extends Component {
     render() {
         const dispatch = this.props.dispatch;
-        const { loggedIn, projects, trafficlights, projects_errors } = this.props.data;
+        const { loggedIn, projects, trafficlights, projects_errors, statuses, statuses_errors } = this.props.data;
         return (
             <article>
                 <div>
@@ -27,7 +27,7 @@ class HomePage extends Component {
                             <h1>Welcome, please login to the portal, there is cake.</h1>
                         )}
                         <button className="btn btn-default" onClick={::this._click}>Get Projects</button>
-                        <Projects dispatch={ dispatch } projects={ projects } errors={ projects_errors } trafficlights={trafficlights}/>
+                        <Projects dispatch={ dispatch } projects={ projects } errors={ projects_errors } trafficlights={trafficlights} statuses={statuses} statuses_errors={statuses_errors} />
                     </section>
                 </div>
             </article>

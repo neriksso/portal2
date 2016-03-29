@@ -1,21 +1,72 @@
 import React, { Component } from 'react';
-import { getTrafficLight } from '../actions/AppActions';
+import { getTrafficLight, setTrafficLightUnit } from '../actions/AppActions';
 import LoadingButton from './LoadingButton.react';
+import {Modal} from 'react-bootstrap';
+import InlineEdit from 'react-edit-inline';
 
 
 export default class TrafficLightUnit extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {showModal: false};
+    }
+
+    dataChanged = (data) => {
+        this.props.dispatch(setTrafficLightUnit(this.props.unit.id, data));
+    };
+
+    onChangeEvent = (event) => {
+        this.props.dispatch(setTrafficLightUnit(this.props.unit.id, {
+            [event.target.name]: event.target.value
+        }));
     }
 
     render() {
-        const { unit } = this.props;
+        const { unit, key, statuses } = this.props;
         const style = {
             backgroundColor: unit.status.color
         };
         return (
-                <li key={unit.id} style={style}><b>{unit.status.label}</b></li>
+                <li key={key} style={style} onClick={this._editUnit} title={unit.notes}><b>{unit.status.label}</b> - {unit.value}
+                    <Modal show={this.state.showModal} onHide={this._close}>
+                        <h1>Edit</h1>
+                        <ul>
+                            <li>
+                                <p>Value: <InlineEdit
+                                    activeClassName="editing"
+                                    text={unit.value ? unit.value : 'Enter value here'}
+                                    paramName="value"
+                                    change={this.dataChanged}
+                                />
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Notes: <textarea className="form-control" name="notes" placeholder="Enter notes here" defaultValue={unit.notes} onChange={this.onChangeEvent}/>
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Status:
+                                    <select className="form-control" name="status" defaultValue={unit.status.id} onChange={this.onChangeEvent}>
+                                        {statuses.map(function(status) {
+                                            return <option key={status.id} value={status.id}>{status.label}</option>;
+                                        })}
+                                    </select>
+                                </p>
+                            </li>
+                        </ul>
+                    </Modal>
+                </li>
         );
+    }
+
+    _editUnit = (event) => {
+        this.setState({showModal: true});
+    }
+
+    _close = (event) => {
+        this.setState({showModal: false});
     }
 }

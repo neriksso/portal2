@@ -35,6 +35,8 @@ const initialState = {
     sideNavLinks: getSideNavLinks(auth.loggedIn()),
     projects: [],
     projects_errors: {},
+    statuses: [],
+    statuses_errors: {},
     trafficlights: {}
 };
 
@@ -152,11 +154,20 @@ export function homeReducer(state = initialState, action) {
             break;
         case constants.GET_PROJECTS_FAIL:
             var errors = assign({}, state.projects_errors, dictifyMapperSmithError(action.payload.err));
-            return assign({}, state, {projects__errors: errors});
+            return assign({}, state, {projects_errors: errors});
             break;
         case constants.GET_PROJECTS_SUCCESS:
             return assign({}, state, {
                 projects: action.payload.data
+            });
+            break;
+        case constants.GET_STATUSES_FAIL:
+            var errors = assign({}, state.statuses_errors, dictifyMapperSmithError(action.payload.err));
+            return assign({}, state, {statuses_errors: errors});
+            break;
+        case constants.GET_STATUSES_SUCCESS:
+            return assign({}, state, {
+                statuses: action.payload.data
             });
             break;
         case constants.GET_TRAFFICLIGHT_FAIL:
@@ -168,6 +179,15 @@ export function homeReducer(state = initialState, action) {
             return assign({}, state, {
                 trafficlights: trafficlights
             });
+            break;
+        case constants.GET_TRAFFICLIGHTUNIT_SUCCESS:
+            const trafficlight = JSON.parse(JSON.stringify(state.trafficlights[action.payload.data.traffic_light]));
+            _.chain(trafficlight.units)
+                .find({id: action.payload.data.id})
+                .merge(action.payload.data)
+                .value();
+            var trafficlights = assign({}, state.trafficlights, {[action.payload.data.traffic_light]: trafficlight});
+            return assign({}, state, {trafficlights: trafficlights});
             break;
         default:
             return state;

@@ -322,6 +322,23 @@ export function getProjectsFromAPI() {
     });
 }
 
+export function getStatuses() {
+    return {
+        type: 'GET_STATUSES',
+        payload: {
+            promise: getStatusesFromAPI(),
+        }
+    };
+}
+
+export function getStatusesFromAPI() {
+    return Client.Reports.getStatuses({
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
+
 export function getTrafficLight(url) {
     return {
         type: 'GET_TRAFFICLIGHT',
@@ -335,6 +352,26 @@ export function getTrafficLightFromAPI(url) {
     return Client.Reports.getTrafficLightByUrl({
         headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'},
         url: url
+    }).then((result) => {
+        return result;
+    });
+}
+
+export function setTrafficLightUnit(unit, data) {
+    return {
+        type: 'GET_TRAFFICLIGHTUNIT',
+        payload: {
+            data: data,
+            promise: setTrafficLightUnitFromAPI(unit, data)
+        }
+    };
+}
+
+export function setTrafficLightUnitFromAPI(unit, data) {
+    return Client.Reports.patchTrafficLightUnit({
+        trafficlightunit: unit,
+        body: data,
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
     }).then((result) => {
         return result;
     });

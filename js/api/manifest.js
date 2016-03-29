@@ -140,31 +140,31 @@ var Manifest = {
             },
             getTrafficLightUnits: {
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/'
+                path: 'api/v1/trafficlightunits/'
             },
             createTrafficLightUnit: {
                 method: 'POST',
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/'
+                path: 'api/v1/trafficlightunits/'
             },
             getTrafficLightUnit: {
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/{trafficlightunit}/'
+                path: 'api/v1/trafficlightunits/{trafficlightunit}/'
             },
             patchTrafficLightUnit: {
                 method: 'PATCH',
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/{trafficlightunit}/'
+                path: 'api/v1/trafficlightunits/{trafficlightunit}/'
             },
             putTrafficLightUnit: {
                 method: 'PUT',
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/{trafficlightunit}/'
+                path: 'api/v1/trafficlightunits/{trafficlightunit}/'
             },
             deleteTrafficLightUnitUnit: {
                 method: 'DELETE',
                 host: config.api.hosts.reports,
-                path: 'api/v1/trafficlightunitunits/{trafficlightunit}/'
+                path: 'api/v1/trafficlightunits/{trafficlightunit}/'
             }
         }
     }
