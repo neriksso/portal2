@@ -24,17 +24,62 @@ body {
   vertical-align: middle;
   border-radius: 50%;
   background: yellow;
+  color: #fff;
+  cursor: pointer;
 }
 
 .trafficlights {
   list-style-type: none;
   display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 .trafficlights li {
   float: left;
+  margin-left: 5px;
+}
+
+.trafficlights li:first-child {
+  margin-left: 0;
 }
 
 .trafficlights:after {
   clear: both;
+}
+
+table.projects-table {
+  border: #777 1px solid;
+  border-collapse: collapse;
+}
+
+.projects-table > thead > tr > th,
+.projects-table > tbody > tr > th,
+.projects-table > tfoot > tr > th,
+.projects-table > thead > tr > td,
+.projects-table > tbody > tr > td,
+.projects-table > tfoot > tr > td {
+  border-bottom: 1px solid #777;
+}
+
+.projects-table > thead > tr > th {
+  border-bottom: 1px solid #777;
+}
+
+.projects-table > tbody > tr > td {
+vertical-align: middle;
+}
+
+.projects-table > tbody > tr > td:first-child {
+  text-transform: uppercase;
+  font-size: 1.2em;
+}
+
+.projects-table > tbody > tr > td:last-child {
+  text-align: center;
+}
+
+.projects-widget > div.header-row > h4 {
+  color: #777;
+  margin-bottom: 15px;
 }
