@@ -3,7 +3,8 @@ var config = {
         'hosts': {
             'base': 'http://192.168.99.101:8000',
             'user': 'http://192.168.99.101:8000',
-            'reports': 'http://192.168.99.102:8000'
+            'reports': 'http://192.168.99.102:8000',
+            'notifications': 'http://localhost:8000'
         }
     }
 };
@@ -165,6 +166,13 @@ var Manifest = {
                 method: 'DELETE',
                 host: config.api.hosts.reports,
                 path: 'api/v1/trafficlightunits/{trafficlightunit}/'
+            }
+        },
+        Notifications: {
+            getNotifications: {
+                method: 'GET',
+                host: config.api.hosts.notifications,
+                path: 'api/notifications/'
             }
         }
     }

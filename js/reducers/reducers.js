@@ -37,7 +37,9 @@ const initialState = {
     projects_errors: {},
     statuses: [],
     statuses_errors: {},
-    trafficlights: {}
+    trafficlights: {},
+    notifications: [],
+    notification_errors: []
 };
 
 console.log(initialState);
@@ -188,6 +190,15 @@ export function homeReducer(state = initialState, action) {
                 .value();
             var trafficlights = assign({}, state.trafficlights, {[action.payload.data.traffic_light]: trafficlight});
             return assign({}, state, {trafficlights: trafficlights});
+            break;
+        case constants.GET_NOTIFICATIONS_FAIL:
+            var errors = assign({}, state.statuses_errors, dictifyMapperSmithError(action.payload.err));
+            return assign({}, state, {statuses_errors: errors});
+            break;
+        case constants.GET_NOTIFICATIONS_SUCCESS:
+            return assign({}, state, {
+                notifications: action.payload.data
+            });
             break;
         default:
             return state;

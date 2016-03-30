@@ -376,3 +376,20 @@ export function setTrafficLightUnitFromAPI(unit, data) {
         return result;
     });
 }
+
+export function getNotifications() {
+    return {
+        type: 'GET_NOTIFICATIONS',
+        payload: {
+            promise: getNotificationsFromAPI(),
+        }
+    };
+}
+
+export function getNotificationsFromAPI() {
+    return Client.Notifications.getNotifications({
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        return result;
+    });
+}
