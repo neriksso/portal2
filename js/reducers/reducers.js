@@ -184,10 +184,15 @@ export function homeReducer(state = initialState, action) {
             break;
         case constants.GET_TRAFFICLIGHTUNIT_SUCCESS:
             const trafficlight = JSON.parse(JSON.stringify(state.trafficlights[action.payload.data.traffic_light]));
-            _.chain(trafficlight.units)
-                .find({id: action.payload.data.id})
-                .merge(action.payload.data)
-                .value();
+            if (_.find(trafficlight.units, {id: action.payload.data.id})) {
+                _.chain(trafficlight.units)
+                    .find({id: action.payload.data.id})
+                    .merge(action.payload.data)
+                    .value();
+            } else {
+                trafficlight.units.unshift(action.payload.data);
+                trafficlight.current = action.payload.data;
+            }
             var trafficlights = assign({}, state.trafficlights, {[action.payload.data.traffic_light]: trafficlight});
             return assign({}, state, {trafficlights: trafficlights});
             break;
