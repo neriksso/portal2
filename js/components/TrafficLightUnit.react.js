@@ -25,14 +25,15 @@ export default class TrafficLightUnit extends Component {
     }
 
     render() {
-        const { unit, key, statuses } = this.props;
+        const { unit, key, read_only, statuses } = this.props;
         const circleStyle = {
             backgroundColor: unit.status.color
         };
+        console.log('readonly', read_only);
         return (
                 <li key={key}>
                     <OverlayTrigger trigger="hover" placement="bottom" overlay={<Popover id={unit.id} title="Notes">{unit.notes}</Popover>}>
-                        <div className="circle" style={circleStyle} onClick={this._editUnit}>{unit.value}</div>
+                        <div className={read_only ? "read_only circle" : "circle"} style={circleStyle} onClick={read_only ? null :this._editUnit}>{unit.value}</div>
                     </OverlayTrigger>
                     <Modal show={this.state.showModal} onHide={this._close}>
                         <ModalHeader>
