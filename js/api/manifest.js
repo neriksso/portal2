@@ -4,7 +4,7 @@ var config = {
             'base': 'http://localhost:8080',
             'user': 'http://localhost:8080',
             'reports': 'http://localhost:8081',
-            'jira': 'http://localhost:8082',
+            'tasks': 'http://localhost:8082',
             'notifications': 'http://localhost:8080'
         }
     }
@@ -169,7 +169,7 @@ var Manifest = {
                 path: 'api/v1/trafficlightunits/{trafficlightunit}/'
             },
             getBurndown: {
-                host: config.api.hosts.jira,
+                host: config.api.hosts.tasks,
                 path: 'api/jira/sprint_info/'
             },
 
