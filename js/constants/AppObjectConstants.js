@@ -7,3 +7,11 @@ export const initialProfile = {
     credentials: [],
     groups: ''
 };
+
+export const burndown = {
+    burndown_hours: 0,
+    name: 'Sprint',
+    start_date: '',
+    end_date: '',
+    total_days: 0
+};

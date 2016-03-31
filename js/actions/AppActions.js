@@ -339,6 +339,25 @@ export function getStatusesFromAPI() {
     });
 }
 
+export function getBurndown() {
+    return {
+        type: 'GET_BURNDOWN',
+        payload: {
+            promise: getBurndownFromAPI(),
+        }
+    };
+}
+
+export function getBurndownFromAPI() {
+    console.log('firing');
+    return Client.Reports.getBurndown({
+        headers: {Authorization: 'JWT ' + localStorage.getItem('accessToken'), 'Content-Type': 'application/json'}
+    }).then((result) => {
+        console.log(result);
+        return result;
+    });
+}
+
 export function getTrafficLight(url) {
     return {
         type: 'GET_TRAFFICLIGHT',

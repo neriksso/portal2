@@ -15,7 +15,7 @@ import * as constants from '../constants/AppConstants';
 // Object.assign is not yet fully supported in all browsers, so we fallback to
 // a polyfill
 const assign = Object.assign || require('object.assign');
-import { initialProfile } from '../constants/AppObjectConstants';
+import { initialProfile, burndown } from '../constants/AppObjectConstants';
 import auth from '../utils/auth';
 
 // The initial application state
@@ -39,7 +39,8 @@ const initialState = {
     statuses_errors: {},
     trafficlights: {},
     notifications: [],
-    notification_errors: []
+    notification_errors: [],
+    burndown: Object.assign({}, burndown)
 };
 
 console.log(initialState);
@@ -180,6 +181,22 @@ export function homeReducer(state = initialState, action) {
             var trafficlights = assign({}, state.trafficlights, {[action.payload.stats.url]: action.payload.data});
             return assign({}, state, {
                 trafficlights: trafficlights
+            });
+            break;
+        case constants.GET_BURNDOWN_FAIL:
+            var errors = assign({}, state.burndown_errors, dictifyMapperSmithError(action.payload.err));
+            return assign({}, state, {burndown_errors: errors});
+            break;
+        case constants.GET_BURNDOWN_SUCCESS:
+            var burndown = assign({}, state.burndown, {
+                burndown_hours: action.payload.data.time.burndown_hours,
+                name: action.payload.data.info.name,
+                start_date: action.payload.data.info.start_date,
+                end_date: action.payload.data.info.end_date,
+                total_days: action.payload.data.info.total_days
+            });
+            return assign({}, state, {
+                burndown: burndown
             });
             break;
         case constants.GET_TRAFFICLIGHTUNIT_SUCCESS:
