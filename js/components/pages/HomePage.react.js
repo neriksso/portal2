@@ -27,7 +27,7 @@ class HomePage extends Component {
                         ) : (
                             <h1>Welcome, please login to the portal, there is cake.</h1>
                         )}
-                        <Notifications dispatch={ dispatch } notifications={ notifications } notifications_errors={ notifications_errors } />
+                        <Notifications on_click={ this.handler } dispatch={ dispatch } notifications={ notifications } notifications_errors={ notifications_errors } />
                         <button className="btn btn-default" onClick={::this._click}>Get Projects</button>
                         <Projects dispatch={ dispatch } projects={ projects } errors={ projects_errors } trafficlights={trafficlights} statuses={statuses} statuses_errors={statuses_errors} />
                     </section>
@@ -40,6 +40,9 @@ class HomePage extends Component {
         this.props.dispatch(getProjects());
     }
 
+    handler = (notification, e) => {
+        console.log(notification);
+    }
 }
 
 // Which props do we want to inject, given the global state?
