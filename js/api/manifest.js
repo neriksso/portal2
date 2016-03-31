@@ -1,10 +1,11 @@
 var config = {
     'api': {
         'hosts': {
-            'base': 'http://192.168.99.101:8000',
-            'user': 'http://192.168.99.101:8000',
-            'reports': 'http://192.168.99.102:8000',
-            'notifications': 'http://localhost:8000'
+            'base': 'http://localhost:8080',
+            'user': 'http://localhost:8080',
+            'reports': 'http://localhost:8081',
+            'tasks': 'http://localhost:8082',
+            'notifications': 'http://localhost:8080'
         }
     }
 };
@@ -166,7 +167,12 @@ var Manifest = {
                 method: 'DELETE',
                 host: config.api.hosts.reports,
                 path: 'api/v1/trafficlightunits/{trafficlightunit}/'
-            }
+            },
+            getBurndown: {
+                host: config.api.hosts.tasks,
+                path: 'api/jira/sprint_info/'
+            },
+
         },
         Notifications: {
             getNotifications: {
