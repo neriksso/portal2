@@ -27,9 +27,8 @@ export default class TrafficLightUnit extends Component {
     render() {
         const { unit, key, read_only, statuses } = this.props;
         const circleStyle = {
-            backgroundColor: unit.status.color
+            backgroundColor: unit.status ? unit.status.color : ""
         };
-        console.log('readonly', read_only);
         return (
                 <li key={key}>
                     <OverlayTrigger trigger="hover" placement="bottom" overlay={<Popover id={unit.id} title="Notes">{unit.notes}</Popover>}>
@@ -48,7 +47,8 @@ export default class TrafficLightUnit extends Component {
 
                             <div>
                                 <h3>Status</h3>
-                                <select className="form-control" name="status" defaultValue={unit.status.id} onChange={this.onChangeEvent}>
+                                <select className="form-control" name="status" defaultValue={unit.status ? unit.status.id : ""} onChange={this.onChangeEvent}>
+                                    <option>Please select a status</option>
                                     {statuses.map(function(status) {
                                         return <option key={status.id} value={status.id}>{status.label}</option>;
                                     })}
